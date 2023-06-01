@@ -1,6 +1,5 @@
 
 name: notify_slack
-//slack notification when event completed on workflow//
 
 on:
 #  workflow_run:
