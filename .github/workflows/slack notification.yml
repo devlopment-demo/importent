@@ -1,0 +1,35 @@
+
+name: notify_slack
+//slack notification when event completed on workflow//
+
+on:
+#  workflow_run:
+#    workflows:
+#      - '*'
+#    types:
+#      - completed
+  repository_dispatch:
+    types: notify_slack
+
+jobs:
+  SetOutput:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo environment
+        run: echo ${{ github.event.client_payload.env }}
+    outputs:
+      workflow_name: ${{ steps.workflow_run.outputs.workflow_name }}
+      env: ${{ github.event.client_payload.env }}
+      product: ${{ github.event.client_payload.product }}
+      runId: ${{ github.event.client_payload.runId }}
+
+  send_slack_notification:
+    uses: dyedurham/CASHMGMT-ERPS-ci-build/.github.......
+    needs: SetOutput
+    with:
+      env: ${{ needs.SetOutput.outputs.env }}
+      product: ${{ needs.SetOutput.outputs.product }}
+      runId: ${{ needs.SetOutput.outputs.runId }}
+    secrets:
+      TOKEN_GH: ${{ secrets.TOKEN_GH }}
+      SLACK_API_TOKEN: ${{ secrets.SLACK_API_TOKEN }}
